@@ -1,0 +1,26 @@
+#!/bin/bash
+. test/integration/helper
+
+test_cat_reads_from_stdin_by_default () {
+printf "%s\n" abc | $CAT | assert_output "\
+abc
+"
+}
+
+test_cat_concatenates_files () {
+printf "%s\n" c | $CAT <(printf "%s\n" a b) - | assert_output "\
+a
+b
+c
+"
+}
+
+#
+# -h
+#
+
+test_h_prints_help () {
+$CAT -h | grep -q "usage: $CAT"
+}
+
+. ts
