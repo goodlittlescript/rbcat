@@ -27,4 +27,5 @@ RUN apk add --no-cache curl bash gawk && \
 
 #############################################################################
 FROM base as app
-COPY ./lib ./bin /app/
+COPY ./bin /app/bin
+COPY ./lib /app/lib
