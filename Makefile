@@ -6,7 +6,7 @@ TARGETS=shell app
 #
 
 images:
-	for target in $(TARGETS); \
+	@for target in $(TARGETS); \
 	do docker build --target $$target -t $(IMAGE_NAME):$$target .; \
 	done
 
