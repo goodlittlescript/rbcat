@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+
+begin
+  require 'optparse'
+  require 'rbcat'
+  require 'English'
+
+  OptionParser.new do |opts|
+    opts.banner = %(
+usage: rbcat [options] FILES...
+
+  Concatenate and print files.
+
+options:
+).lstrip
+
+    opts.on('-d', 'debug mode') do
+      $DEBUG = true
+    end
+
+    opts.on('-h', '--help', 'print this help') do
+      puts opts
+      puts
+      exit
+    end
+
+    opts.on('-u', 'unbuffer output') do
+      STDOUT.sync = true
+    end
+  end.parse!
+
+  ARGV << '-' if ARGV.empty?
+
+  ARGV.each do |file|
+    File.open(file == '-' ? 0 : file, 'rb') do |io|
+      Rbcat.copy_stream(io, STDOUT, 1)
+    end
+  end
+rescue Interrupt
+  exit 130
+rescue Errno::EPIPE
+  exit 0
+rescue StandardError
+  raise if $DEBUG
+  warn $ERROR_INFO.message
+  exit 1
+end
