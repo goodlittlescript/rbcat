@@ -38,8 +38,9 @@ phony:
 
 .PHONY: \
 	images \
-	shell \
+	run \
 	test \
 	lint \
+	shell \
 	artifacts \
 	phony
