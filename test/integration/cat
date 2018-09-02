@@ -23,4 +23,23 @@ test_h_prints_help () {
 $CAT -h | grep -q "usage: $CAT"
 }
 
+#
+# -u
+#
+
+test_u_unbuffers_output () {
+start_time="$(date +%s)"
+n_tries=0
+while [ "$n_tries" -lt 20 ]
+do
+   printf "%s\n" "$n_tries"
+   sleep 0.1
+   n_tries="$((n_tries + 1))"
+done | $CAT -u | grep -q '.'
+end_time="$(date +%s)"
+
+[ $((end_time - start_time)) -lt 2 ]
+assert_status $? 0 "output was not unbuffered"
+}
+
 . ts
