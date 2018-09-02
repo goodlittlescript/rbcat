@@ -15,6 +15,31 @@ c
 "
 }
 
+test_epipe_exits_0 () {
+yes | $CAT >&-
+assert_status $? 0 "EPIPE did not exit 0"
+}
+
+test_interrupt_exits_130 () {
+expect -f - "$CAT" <<"DOC"
+log_user 0
+set timeout 1
+spawn /bin/bash
+send "(printf '%s' a b c; sleep 10) | "
+send [lindex $argv 0]
+send "\r"
+expect {abc}
+send \r\x1A
+send "kill -s INT %1\r"
+send "fg\r"
+send "exit $?\r"
+expect eof
+catch wait result
+exit [lindex $result 3]
+DOC
+assert_status $? 130 "INT did not exit 130"
+}
+
 #
 # -h
 #

@@ -1,3 +1,2 @@
 #!/bin/bash
-export CAT="rbcat"
 ts test/integration/cat*
