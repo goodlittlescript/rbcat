@@ -13,14 +13,14 @@ RUN bundle install --without development
 FROM base as shell
 
 # Install development dependencies
-# * curl bash gawk expect for ts
+# * curl bash gawk diffutils expect for ts
 # * build-base for rubocop
-RUN apk add --no-cache curl bash gawk expect && \
+RUN apk add --no-cache curl bash gawk diffutils expect && \
     cd /usr/local/lib && \
-    curl -OL https://github.com/thinkerbot/ts/archive/v2.0.1.tar.gz && \
-    tar -xvzf v2.0.1.tar.gz && \
-    ln -s /usr/local/lib/ts-2.0.1/bin/ts /usr/local/bin/ts && \
-    rm v2.0.1.tar.gz && \
+    curl -OL https://github.com/thinkerbot/ts/archive/v2.0.2.tar.gz && \
+    tar -xvzf v2.0.2.tar.gz && \
+    ln -s /usr/local/lib/ts-2.0.2/bin/ts /usr/local/bin/ts && \
+    rm v2.0.2.tar.gz && \
     cd /app && \
     apk add --no-cache build-base && \
     bundle install --with development
