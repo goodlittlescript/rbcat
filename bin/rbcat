@@ -6,6 +6,9 @@ begin
   require 'rbcat'
   require 'English'
 
+  options = {
+    unbuffer: false
+  }
   OptionParser.new do |opts|
     opts.banner = %(
 usage: rbcat [options] FILES...
@@ -26,9 +29,13 @@ options:
     end
 
     opts.on('-u', 'unbuffer output') do
-      STDOUT.sync = true
+      options[:unbuffer] = true
     end
   end.parse!
+
+  if options[:unbuffer]
+    STDOUT.sync = true
+  end
 
   ARGV << '-' if ARGV.empty?
 
@@ -40,7 +47,7 @@ options:
 rescue Interrupt
   exit 130
 rescue Errno::EPIPE
-  exit 0
+  exit 141
 rescue StandardError
   raise if $DEBUG
   warn $ERROR_INFO.message
