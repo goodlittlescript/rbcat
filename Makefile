@@ -19,6 +19,9 @@ test:
 lint:
 	docker run --rm -v $(PWD):/app $(IMAGE_NAME):shell bundle exec rubocop
 
+fix:
+	docker run --rm -v $(PWD):/app $(IMAGE_NAME):shell bundle exec rubocop -a
+
 shell:
 	docker run -it --rm -v $(PWD):/app $(IMAGE_NAME):shell /bin/sh
 
@@ -41,6 +44,7 @@ phony:
 	run \
 	test \
 	lint \
+	fix \
 	shell \
 	artifacts \
 	phony

@@ -33,9 +33,7 @@ options:
     end
   end.parse!
 
-  if options[:unbuffer]
-    STDOUT.sync = true
-  end
+  STDOUT.sync = true if options[:unbuffer]
 
   ARGV << '-' if ARGV.empty?
 
