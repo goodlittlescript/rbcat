@@ -37,14 +37,13 @@ Clone repo, build images.
 
 ```bash
 make images
-make shell
 ```
 
-Run the utility and run tests.
+Run the utility, test, fix, and lint.
 
 ```bash
 make run <<<"success"
-make test lint
+make test fix lint
 ```
 
 Get a shell for development.

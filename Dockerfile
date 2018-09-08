@@ -16,12 +16,8 @@ FROM base as shell
 # * curl bash gawk diffutils expect for ts
 # * build-base for rubocop
 RUN apk add --no-cache curl bash gawk diffutils expect && \
-    cd /usr/local/lib && \
-    curl -OL https://github.com/thinkerbot/ts/archive/v2.0.2.tar.gz && \
-    tar -xvzf v2.0.2.tar.gz && \
-    ln -s /usr/local/lib/ts-2.0.2/bin/ts /usr/local/bin/ts && \
-    rm v2.0.2.tar.gz && \
-    cd /app && \
+    curl -o /usr/local/bin/ts -L https://raw.githubusercontent.com/thinkerbot/ts/v2.0.2/bin/ts && \
+    chmod +x /usr/local/bin/ts && \
     apk add --no-cache build-base && \
     bundle install --with development
 
