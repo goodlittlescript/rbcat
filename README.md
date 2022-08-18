@@ -29,7 +29,7 @@ rbcat file
 
 ## INSTALLATION
 
-Add `rbcat` to your PATH (or execute it directly).
+Add `rbcat` to your PATH (or execute it directly). There are no additional dependencies.
 
 ## DEVELOPMENT
 

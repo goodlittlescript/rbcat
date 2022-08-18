@@ -1,11 +1,21 @@
 #!/usr/bin/env ruby
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'optparse'
+require 'English'
+
+# Rbcat copies streams in chunks
+module Rbcat
+  module_function
+
+  def copy_stream(input, output, chuck_size = 1024)
+    loop do
+      chunk = input.read(chuck_size)
+      break if chunk.nil?
+      output << chunk
+    end
+  end
+end
 
 begin
-  require 'optparse'
-  require 'rbcat'
-  require 'English'
-
   options = {
     unbuffer: false
   }
