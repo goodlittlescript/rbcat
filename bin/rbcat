@@ -46,10 +46,6 @@ usage: rbcat [options] FILES...
 options:
 ).lstrip
 
-    opts.on('-d', 'debug mode') do
-      $DEBUG = true
-    end
-
     opts.on('-h', '--help', 'print this help') do
       puts opts
       puts
@@ -80,8 +76,4 @@ rescue Interrupt
   exit 130
 rescue Errno::EPIPE
   exit 141
-rescue StandardError
-  raise if $DEBUG
-  warn $ERROR_INFO.message
-  exit 1
 end
