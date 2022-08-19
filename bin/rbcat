@@ -1,15 +1,33 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'English'
+require 'logger'
+require 'time'
 
-# Rbcat copies streams in chunks
-module Rbcat
-  module_function
+# Setup logger
+logger = Logger.new(STDERR)
+logger.progname = File.basename($PROGRAM_NAME)
+logger.formatter = proc do |severity, datetime, progname, msg|
+  "[#{datetime.utc.iso8601}] #{severity} #{progname} - #{msg}\n"
+end
+logger.level = ENV.fetch('LOG_LEVEL', Logger::WARN)
 
-  def copy_stream(input, output, chuck_size = 1024)
+# Command code - inline for simplicity
+class Command
+  attr_reader :logger
+
+  def initialize(logger)
+    @logger = logger
+  end
+
+  def copy_stream(input, output, chunk_size = 1024)
     loop do
-      chunk = input.read(chuck_size)
-      break if chunk.nil?
+      chunk = input.read(chunk_size)
+      if chunk.nil?
+        logger.debug('eof')
+        break
+      end
+      logger.debug("read: #{chunk_size}")
       output << chunk
     end
   end
@@ -41,15 +59,21 @@ options:
     opts.on('-u', 'unbuffer output') do
       options[:unbuffer] = true
     end
+
+    opts.on('-v', 'verbose output') do
+      logger.level -= 1
+    end
   end.parse!
 
   STDOUT.sync = true if options[:unbuffer]
 
   ARGV << '-' if ARGV.empty?
 
+  command = Command.new(logger)
   ARGV.each do |file|
+    logger.info("filename: #{file}")
     File.open(file == '-' ? 0 : file, 'rb') do |io|
-      Rbcat.copy_stream(io, STDOUT, 1)
+      command.copy_stream(io, STDOUT, 1)
     end
   end
 rescue Interrupt
